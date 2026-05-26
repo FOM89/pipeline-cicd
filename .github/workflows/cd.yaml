@@ -1,0 +1,41 @@
+#Nome exibido no GitHub
+name: Deploy GitHub Pages
+
+#Toda vez que houver push na main, o deploy acontecerá
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    #Permissões necessárias para publicação
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    # Define que o deploy será no ambiente GitHub Pages
+    environment:
+      name: github-pages
+
+    steps:
+      # Baixa o repositório
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Configura ambiente do GitHub Pages
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # Faz upload dos arquivos do projeto da pasta site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+      # Publica no GitHub Pages
+      - name: Deploy GitHub Pages
+        uses: actions/deploy-pages@v4

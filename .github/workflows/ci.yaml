@@ -1,0 +1,33 @@
+#Define o nome que aparecerá na aba “Actions” do GitHub
+name: CI Pipeline
+
+#quando houver push na branch main o pipeline será executado automaticamente
+on:
+  push:
+    branches:
+      - main
+
+#definição de processos
+jobs:
+  validar-html:
+    #GitHub cria uma máquina Linux Ubuntu temporária para executar o pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa os arquivos do repositório
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Verificar se index.html existe
+        run: |
+          if [ ! -f site/index.html ]; then
+            echo "Arquivo index.html não encontrado!"
+            exit 1
+          fi
+
+      - name: Validar conteúdo HTML
+        run: |
+          grep "<html" site/index.html
+
+      - name: Pipeline executado com sucesso
+        run: echo "CI executado com sucesso!"
